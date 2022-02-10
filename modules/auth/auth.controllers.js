@@ -61,9 +61,9 @@ async function login(req, res) {
     }
 
     const isValidUser = await bcrypt.compare(password, user.password);
-
+    const sessionUser = { email: user.email, _id: user._id };
     if (isValidUser) {
-      return res.status(200).json({ message: 'successfully logged in!' }).end();
+      return res.status(200).json(sessionUser).end();
     }
 
     return res.status(400).json({ message: 'wrong password' }).end();
