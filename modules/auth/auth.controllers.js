@@ -24,9 +24,9 @@ async function signup(req, res) {
     }
 
     const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt).end();
+    const hashedPassword = await bcrypt.hash(password, salt);
 
-    const user = await User.create({ email, password: hashedPassword }).lean();
+    const user = await User.create({ email, password: hashedPassword });
 
     const sessionUser = { email: user.email, _id: user._id };
     req.session.user = sessionUser;
@@ -127,5 +127,5 @@ module.exports = {
   logout,
   isLoggedIn,
   getAllUsers,
-  deleteUser
+  deleteUser,
 };
