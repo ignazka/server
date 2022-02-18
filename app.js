@@ -1,6 +1,7 @@
 const app = require('express')();
 const { connectDB, middlewares, sessionConfig } = require('./config');
 const authRouter = require('./modules/auth');
+const nutritionRouter = require('./modules/nutrition');
 const taskRouter = require('./modules/task');
 const { PORT } = process.env;
 
@@ -11,6 +12,7 @@ async function start() {
     sessionConfig(app);
     authRouter(app);
     taskRouter(app);
+    nutritionRouter(app);
 
     app.listen(PORT, () => console.log(`Server is listening on Port: ${PORT}`));
   } catch (error) {
