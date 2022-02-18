@@ -1,5 +1,5 @@
 module.exports = {
-  createTask: '/create',
+  createTask: '/',
   getTasks: '/',
   getTask: '/:taskID',
   updateTask: '/:taskID',
