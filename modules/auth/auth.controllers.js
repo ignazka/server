@@ -24,9 +24,9 @@ async function signup(req, res) {
     }
 
     const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt).end();
+    const hashedPassword = await bcrypt.hash(password, salt);
 
-    const user = await User.create({ email, password: hashedPassword }).lean();
+    const user = await User.create({ email, password: hashedPassword });
 
     const sessionUser = { email: user.email, _id: user._id };
     req.session.user = sessionUser;
@@ -63,7 +63,9 @@ async function login(req, res) {
     const isValidUser = await bcrypt.compare(password, user.password);
 
     if (isValidUser) {
-      return res.status(200).json({ message: 'successfully logged in!' }).end();
+      const sessionUser = { email: user.email, _id: user._id };
+      req.session.user = sessionUser;
+      return res.status(200).json(sessionUser).end();
     }
 
     return res.status(400).json({ message: 'wrong password' }).end();
@@ -83,7 +85,7 @@ async function logout(req, res) {
     await req.session.destroy();
     return res.status(200).json({ message: 'successfully logged out!' }).end();
   } catch (error) {
-    return res.status(500).json({ message: error.message }).end();
+    return res.status(500).json({ internalMessage: error.message }).end();
   }
 }
 
@@ -95,7 +97,7 @@ async function isLoggedIn(req, res) {
     }
     return res.status(400).json(null).end();
   } catch (error) {
-    return res.status(500).json({ message: error.message }).end();
+    return res.status(500).json({ internalMessage: error.message }).end();
   }
 }
 
@@ -104,7 +106,7 @@ async function getAllUsers(req, res) {
     const allUsers = await User.find().lean();
     return res.status(200).json(allUsers).end();
   } catch (error) {
-    return res.status(500).json({ message: error.message }).end();
+    return res.status(500).json({ internalMessage: error.message }).end();
   }
 }
 
@@ -117,7 +119,7 @@ async function deleteUser(req, res) {
     const user = await User.findByIdAndDelete(userID).lean();
     return res.status(200).json(user).end();
   } catch (error) {
-    return res.status(500).json({ message: error.message }).end();
+    return res.status(500).json({ internalMessage: error.message }).end();
   }
 }
 
@@ -127,5 +129,5 @@ module.exports = {
   logout,
   isLoggedIn,
   getAllUsers,
-  deleteUser
+  deleteUser,
 };
