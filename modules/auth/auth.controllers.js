@@ -61,10 +61,13 @@ async function login(req, res) {
     }
 
     const isValidUser = await bcrypt.compare(password, user.password);
-
+    const sessionUser = { email: user.email, _id: user._id };
     if (isValidUser) {
+<<<<<<< HEAD
       const sessionUser = { email: user.email, _id: user._id };
       req.session.user = sessionUser;
+=======
+>>>>>>> 3219e3a791e31c2e4ead674d506b35d9c81fe68a
       return res.status(200).json(sessionUser).end();
     }
 
